@@ -13,4 +13,13 @@
     
     <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
     args="-urdf -model mobile_robot -param robot_description -x 0 -y 0 -z 0.5"/>
+    
+<!--
+<rosparam file="$(find mobile_robot)/config/diff_drive_control.yaml" command="load" />
+
+<node name="controller_spawner" pkg="controller_manager" type="spawner"
+      args="joint_state_controller diff_drive_controller" />
+-->
+      
 </launch>
+

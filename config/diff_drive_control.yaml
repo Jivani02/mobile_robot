@@ -1,0 +1,38 @@
+joint_state_controller:
+  type: "joint_state_controller/JointStateController"
+  publish_rate: 50
+  
+diff_drive_controller:
+  type: "diff_drive_controller/DiffDriveController"
+  left_wheel: ['revolute_1', 'revolute_4']
+  right_wheel: ['revolute_2', 'revolute_3']
+  publish_rate: 50
+  wheel_separation: 0.45
+  wheel_radius: 0.065
+  
+  # Odometry
+  enable_odom_tf: true
+  base_frame_id: body1
+  
+  # Velocity/acceleration limits
+  linear:
+    x:
+      has_velocity_limits: true
+      max_velocity: 1.0
+      has_acceleration_limits: true
+      max_acceleration: 1.0
+  angular:
+    z:
+      has_velocity_limits: true
+      max_velocity: 2.0
+      has_acceleration_limits: true
+      max_acceleration: 2.0
+      
+gazebo_ros_control:
+  pid_gains:
+    revolute_1: {p: 10.0, i: 0.01, d: 0.1}
+    revolute_2: {p: 10.0, i: 0.01, d: 0.1}
+    revolute_3: {p: 10.0, i: 0.01, d: 0.1}
+    revolute_4: {p: 10.0, i: 0.01, d: 0.1}
+      
+
