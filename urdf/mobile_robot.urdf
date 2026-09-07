@@ -201,7 +201,7 @@
     </joint>
     
     <gazebo reference="body1">
-         <material>Gazebo/Grey</material>
+         <material>Gazebo/black</material>
     </gazebo>
     <gazebo reference="front_left_wheel_1__body1">
        <material>Gazebo/grey</material>
@@ -214,12 +214,12 @@
        <mu2>0.5</mu2>
     </gazebo>
     <gazebo reference="reae_right_wheel_1__body1">
-       <material>Gazebo/Black</material>
+       <material>Gazebo/grey</material>
        <mu1>0.5</mu1>
        <mu2>0.5</mu2>
     </gazebo>
     <gazebo reference="rear_left_wheel_1__body1">
-       <material>Gazebo/Black</material>
+       <material>Gazebo/grey</material>
        <mu1>0.5</mu1>
        <mu2>0.5</mu2>
     </gazebo>
@@ -227,7 +227,7 @@
     <gazebo reference="lidar_link">
        <sensor type="ray" name="lidar_sensor">
             <pose>0 0 0 0 0 0</pose>
-            <visualize>flase</visualize>
+            <visualize>false</visualize>
             <update_rate>10</update_rate>
             <ray>
               <scan>
