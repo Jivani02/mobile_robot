@@ -13,6 +13,9 @@ A mobile robot project built end-to-end: mechanical design → URDF → physics 
 **LiDAR scan visualization**
 ![Gazebo scan](docs/gazebo_scan.png)
 
+**Correct orientation in Gazebo adn RViz**
+![Gazebo scan](docs/Correct_orienation.png)
+
 ## Current Status
 
 ✅ **Mechanical design** — chassis and wheels designed in Fusion 360, assembled and mated in Onshape
@@ -21,7 +24,7 @@ A mobile robot project built end-to-end: mechanical design → URDF → physics 
 ✅ **Differential drive** — 4-wheel skid-steer control via `libgazebo_ros_skid_steer_drive`, tested with keyboard teleop
 ✅ **LiDAR sensing** — simulated 360° 2D LiDAR publishing to `/scan`, verified in a realistic house environment
 ✅ **SLAM** — mapped the environment using `slam_toolbox`, saved as a reusable occupancy grid map
-✅ **Navigation stack** — `move_base` + `amcl` configured with custom costmaps and local planner; autonomous goal-sending is functional
+✅ **Navigation stack** — `move_base` + `amcl` with custom costmaps and local planner, fully working with a consistent TF tree
 
 ⚠️ **Known issue** — the `libgazebo_ros_skid_steer_drive` plugin's odometry reports a consistent ~90° yaw offset for this 4-wheel configuration (linear motion is correct; heading tracking is not). This affects `amcl` localization accuracy and `move_base` goal execution. A software correction node is planned; alternatively, migrating to `ros_control`'s `diff_drive_controller` (which has more standard odometry math) is a candidate fix.
 
@@ -49,6 +52,7 @@ mobile_robot/
 ├── config/       # Controller and navigation configuration YAML
 ├── worlds/       # Gazebo world files
 ├── maps/         # Saved SLAM maps
+├── docs/         # Screenshots and media
 └── scripts/      # Python nodes
 ```
 
@@ -78,7 +82,8 @@ roslaunch mobile_robot mobile_robot.launch
 - **Collision geometry optimization**: replaced detailed mesh-based wheel collisions with simplified cylinder primitives to eliminate contact-point jitter and drift.
 - **Friction tuning**: identified and resolved a friction/turning tradeoff specific to 4-wheel skid-steer geometry — high friction prevented in-place turning due to wheel scrubbing.
 - **Navigation frame chain**: debugged a broken `map → odom → body1` TF chain by correctly configuring `amcl` alongside `move_base`, after discovering `move_base` reads several parameters from its own namespace independent of the individual costmap configs.
+- **Orientation mismatch investigation**: the robot's displayed orientation in RViz appeared rotated ~90° from its actual orientation in Gazebo. Initial hypothesis was a math error in the drive plugin's odometry calculation; a Python correction node was built to test this using tf.transformations (quaternion ↔ Euler conversion). Testing revealed the actual root cause was different: a leftover static root → body1 joint (an artifact from an Onshape assembly-anchor link) was creating two competing parents for the body1 frame in the TF tree, corrupting the displayed transform. Removing the conflicting static joint resolved the issue completely — a good reminder to verify a fix's actual mechanism rather than assuming the first plausible hypothesis is correct.
 
 ## Roadmap
 
-Six of ten planned project phases complete. See commit history for detailed progress.
+Seven of ten planned project phases complete. See commit history for detailed progress.

@@ -137,7 +137,7 @@
             </geometry>
         </collision>
     </link>
-    <link name="root" />
+    
     
     <link name="lidar_link">
          <inertial>
@@ -163,12 +163,6 @@
     </link>
 
 
-    <joint name="fixed_node_to_root_joint" type="fixed">
-        <origin xyz="0.0631956 0.100605 -0.0138088" rpy="0 -0 0" />
-        <axis xyz="0 0 1" />
-        <parent link="root" />
-        <child link="body1" />
-    </joint>
     <joint name="revolute_1" type="continuous">
         <origin xyz="-0.225 0.17 0.045" rpy="0 -0 0" />
         <axis xyz="-1 0 0" />
