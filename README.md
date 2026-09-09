@@ -18,7 +18,7 @@ A mobile robot project built end-to-end: mechanical design → URDF → physics 
 
 ## Current Status
 
-✅ **Mechanical design** — chassis and wheels designed in Fusion 360, assembled and mated in Onshape
+✅ **Mechanical design** — chassis and wheels designed in Fusion 360, assembled and mated in Onshape$
 ✅ **URDF model** — generated via `onshape-to-robot`, validated in RViz
 ✅ **Physics simulation** — stable in Gazebo (tuned collision geometry and friction for realistic wheel-ground contact)
 ✅ **Differential drive** — 4-wheel skid-steer control via `libgazebo_ros_skid_steer_drive`, tested with keyboard teleop
