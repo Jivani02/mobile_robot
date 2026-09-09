@@ -16,35 +16,26 @@ A mobile robot project built end-to-end: mechanical design → URDF → physics 
 **Correct orientation in Gazebo adn RViz**
 ![Gazebo scan](docs/Correct_orienation.png)
 
-## Current Status
+Current Status
 
-✅ **Mechanical design** — chassis and wheels designed in Fusion 360, assembled and mated in Onshape
-✅ **URDF model** — generated via `onshape-to-robot`, validated in RViz
-✅ **Physics simulation** — stable in Gazebo (tuned collision geometry and friction for realistic wheel-ground contact)
-✅ **Differential drive** — 4-wheel skid-steer control via `libgazebo_ros_skid_steer_drive`, tested with keyboard teleop
-✅ **LiDAR sensing** — simulated 360° 2D LiDAR publishing to `/scan`, verified in a realistic house environment
-✅ **SLAM** — mapped the environment using `slam_toolbox`, saved as a reusable occupancy grid map
-✅ **Navigation stack** — `move_base` + `amcl` with custom costmaps and local planner, fully working with a consistent TF tree
+✅ Mechanical design — chassis and wheels designed in Fusion 360, assembled and mated in Onshape ✅ URDF model — generated via onshape-to-robot, validated in RViz ✅ Physics simulation — stable in Gazebo (tuned collision geometry and friction for realistic wheel-ground contact) ✅ Differential drive — 4-wheel skid-steer control via libgazebo_ros_skid_steer_drive, tested with keyboard teleop ✅ LiDAR sensing — simulated 360° 2D LiDAR publishing to /scan, verified in a realistic house environment ✅ SLAM — mapped the environment using slam_toolbox, saved as a reusable occupancy grid map ✅ Autonomous navigation — move_base + amcl, confirmed working end-to-end: robot localizes, plans a global path, and autonomously drives to a goal pose while avoiding obstacles
 
-⚠️ **Known issue** — the `libgazebo_ros_skid_steer_drive` plugin's odometry reports a consistent ~90° yaw offset for this 4-wheel configuration (linear motion is correct; heading tracking is not). This affects `amcl` localization accuracy and `move_base` goal execution. A software correction node is planned; alternatively, migrating to `ros_control`'s `diff_drive_controller` (which has more standard odometry math) is a candidate fix.
+🚧 Planned next:
 
-🚧 **Planned next:**
-- Odometry correction (software patch or controller migration)
-- Autonomous frontier exploration (`explore_lite`)
-- Stereo camera integration
-- Independent 4-wheel drive (upgrade from skid-steer)
+    Autonomous frontier exploration (explore_lite)
+    Stereo camera integration
+    Independent 4-wheel drive (upgrade from skid-steer)
 
-## Tech Stack
+Tech Stack
 
-- **ROS1 (Noetic)**
-- **Gazebo** (physics simulation)
-- **Fusion 360** + **Onshape** (mechanical design, via `onshape-to-robot`)
-- **slam_toolbox**, **move_base**, **amcl** (mapping and navigation)
-- **Python** (ROS nodes)
+    ROS1 (Noetic)
+    Gazebo (physics simulation)
+    Fusion 360 + Onshape (mechanical design, via onshape-to-robot)
+    slam_toolbox, move_base, amcl (mapping and navigation)
+    Python (ROS nodes)
 
-## Repository Structure
+Repository Structure
 
-```
 mobile_robot/
 ├── urdf/         # Robot description (URDF)
 ├── meshes/       # STL mesh files for visual/collision geometry
@@ -54,11 +45,10 @@ mobile_robot/
 ├── maps/         # Saved SLAM maps
 ├── docs/         # Screenshots and media
 └── scripts/      # Python nodes
-```
 
-## Running the Simulation
+Running the Simulation
+bash
 
-```bash
 # Spawn the robot in the house environment with LiDAR active
 roslaunch mobile_robot gazebo.launch
 
@@ -71,19 +61,21 @@ roslaunch mobile_robot slam.launch
 # Or navigate autonomously on a saved map
 rosrun map_server map_server maps/house_map.yaml
 roslaunch mobile_robot move_base.launch
+rosrun rviz rviz
 
-#Spawn robot in Rviz
+# View the robot model and TF frames only (no simulation)
 roslaunch mobile_robot mobile_robot.launch
-```
 
-## Key Engineering Challenges Solved
+Key Engineering Challenges Solved
 
-- **Unit scale mismatch**: diagnosed and fixed a 10x scale discrepancy introduced during the Fusion 360 → Onshape export pipeline, which had been causing unstable, exploding physics in simulation.
-- **Collision geometry optimization**: replaced detailed mesh-based wheel collisions with simplified cylinder primitives to eliminate contact-point jitter and drift.
-- **Friction tuning**: identified and resolved a friction/turning tradeoff specific to 4-wheel skid-steer geometry — high friction prevented in-place turning due to wheel scrubbing.
-- **Navigation frame chain**: debugged a broken `map → odom → body1` TF chain by correctly configuring `amcl` alongside `move_base`, after discovering `move_base` reads several parameters from its own namespace independent of the individual costmap configs.
-- **Orientation mismatch investigation**: the robot's displayed orientation in RViz appeared rotated ~90° from its actual orientation in Gazebo. Initial hypothesis was a math error in the drive plugin's odometry calculation; a Python correction node was built to test this using tf.transformations (quaternion ↔ Euler conversion). Testing revealed the actual root cause was different: a leftover static root → body1 joint (an artifact from an Onshape assembly-anchor link) was creating two competing parents for the body1 frame in the TF tree, corrupting the displayed transform. Removing the conflicting static joint resolved the issue completely — a good reminder to verify a fix's actual mechanism rather than assuming the first plausible hypothesis is correct.
+    Unit scale mismatch: diagnosed and fixed a 10x scale discrepancy introduced during the Fusion 360 → Onshape export pipeline, which had been causing unstable, exploding physics in simulation.
+    Collision geometry optimization: replaced detailed mesh-based wheel collisions with simplified cylinder primitives to eliminate contact-point jitter and drift.
+    Friction tuning: identified and resolved a friction/turning tradeoff specific to 4-wheel skid-steer geometry — high friction prevented in-place turning due to wheel scrubbing.
+    TF tree conflicts: found and removed a leftover static root → body1 joint (an artifact from an Onshape assembly-anchor link) that was creating two competing parents for the body1 frame, corrupting displayed orientation. Also diagnosed a missing robot_state_publisher/joint_state_publisher chain that left wheel and LiDAR frames disconnected from the TF tree.
+    Forward-axis convention mismatch: this robot's wheels rotate around the X-axis, making its true kinematic forward direction Y — but ROS navigation tools (amcl, move_base) universally assume a robot's forward direction is X. Rather than reworking the wheel geometry, added a small fixed base_link frame rotated 90° from body1, and pointed all navigation tools at it — resolving persistent orientation mismatches during pose estimation without touching the underlying, already-validated robot geometry.
+    Launch-file parameter namespacing: costmap parameters loaded via <rosparam> were silently not reaching move_base, because move_base reads costmap settings from a namespace nested under its own node name (/move_base/global_costmap/...), not a top-level namespace. Combined with YAML files that had their own wrapping keys, this caused a doubled-nesting bug that left the global costmap using default (blank) map data instead of the real saved map — traced via direct parameter server inspection (rosparam get, rosparam list) rather than guesswork.
 
-## Roadmap
+Roadmap
 
-Seven of ten planned project phases complete. See commit history for detailed progress.
+Eight of ten planned project phases complete. See commit history for detailed progress.
+

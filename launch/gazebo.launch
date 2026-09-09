@@ -12,7 +12,9 @@
     <param name="robot_description" textfile="$(find mobile_robot)/urdf/mobile_robot.urdf"/>
     
     <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-    args="-urdf -model mobile_robot -param robot_description -x 0 -y 0 -z 0.5"/>
+    args="-urdf -model mobile_robot -param robot_description -x 0 -y 0.25 -z 0.5"/>
+    
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen" />
     
 <!--
 <rosparam file="$(find mobile_robot)/config/diff_drive_control.yaml" command="load" />
