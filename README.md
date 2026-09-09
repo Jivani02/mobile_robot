@@ -44,7 +44,7 @@ A mobile robot project built end-to-end: mechanical design -> URDF -> physics si
 - **Python** (ROS nodes)
 
 ## Repository Structure
-'''
+```
 mobile_robot/
 ├── urdf/         # Robot description (URDF)
 ├── meshes/       # STL mesh files for visual/collision geometry
@@ -54,7 +54,7 @@ mobile_robot/
 ├── maps/         # Saved SLAM maps
 ├── docs/         # Screenshots and media
 └── scripts/      # Python nodes
-'''
+```
 
 ## Running the Simulation
 
