@@ -57,7 +57,7 @@ mobile_robot/
 ```
 
 ## Running the Simulation
-
+```
 -Spawn the robot in the house environment with LiDAR active:
 roslaunch mobile_robot gazebo.launch
 
@@ -73,7 +73,7 @@ roslaunch mobile_robot move_base.launch
 
 -View the robot model and TF frames only (no simulation):
 roslaunch mobile_robot mobile_robot.launch
-
+```
 ## Key Engineering Challenges Solved
 
 - **Unit scale mismatch**: diagnosed and fixed a 10x scale discrepancy introduced during the Fusion 360 → Onshape export pipeline, which had been causing unstable, exploding physics in simulation.
