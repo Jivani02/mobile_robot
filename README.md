@@ -1,30 +1,34 @@
 # Mobile Robot — 4-Wheel Skid-Steer Robot with LiDAR, SLAM & Autonomous Navigation
 
-A mobile robot project built end-to-end: mechanical design → URDF → physics simulation → differential drive control → LiDAR sensing → SLAM mapping → autonomous navigation. Built as a hands-on learning and portfolio project covering the full robotics development pipeline in ROS1.
+A mobile robot project built end-to-end: mechanical design -> URDF -> physics simulation -> differential drive control -> LiDAR sensing -> SLAM mapping -> autonomous navigation. Built as a hands-on learning and portfolio project covering the full robotics development pipeline in ROS1.
 
 ## Screenshots
 
 **RViz — Robot model and TF frames**
+
 ![RViz view](docs/Rviz.png)
 
 **Gazebo — Physics simulation**
+
 ![Gazebo view](docs/gazebo_1.png)
 
 **LiDAR scan visualization**
+
 ![LiDAR scan in Gazebo](docs/gazebo_scan.png)
 
 **Correct orientation — RViz matching Gazebo**
+
 ![Correct orientation](docs/Correct_orienation.png)
 
 ## Current Status
 
-✅ **Mechanical design** — chassis and wheels designed in Fusion 360, assembled and mated in Onshape
-✅ **URDF model** — generated via `onshape-to-robot`, validated in RViz
-✅ **Physics simulation** — stable in Gazebo (tuned collision geometry and friction for realistic wheel-ground contact)
-✅ **Differential drive** — 4-wheel skid-steer control via `libgazebo_ros_skid_steer_drive`, tested with keyboard teleop
-✅ **LiDAR sensing** — simulated 360° 2D LiDAR publishing to `/scan`, verified in a realistic house environment
-✅ **SLAM** — mapped the environment using `slam_toolbox`, saved as a reusable occupancy grid map
-✅ **Autonomous navigation** — `move_base` + `amcl`, confirmed working end-to-end: robot localizes, plans a global path, and autonomously drives to a goal pose while avoiding obstacles
+- Done: **Mechanical design** — chassis and wheels designed in Fusion 360, assembled and mated in Onshape
+- Done: **URDF model** — generated via `onshape-to-robot`, validated in RViz
+- Done: **Physics simulation** — stable in Gazebo (tuned collision geometry and friction for realistic wheel-ground contact)
+- Done: **Differential drive** — 4-wheel skid-steer control via `libgazebo_ros_skid_steer_drive`, tested with keyboard teleop
+- Done: **LiDAR sensing** — simulated 360-degree 2D LiDAR publishing to `/scan`, verified in a realistic house environment
+- Done: **SLAM** — mapped the environment using `slam_toolbox`, saved as a reusable occupancy grid map
+- Done: **Autonomous navigation** — `move_base` + `amcl`, confirmed working end-to-end: robot localizes, plans a global path, and autonomously drives to a goal pose while avoiding obstacles
 
 ## Known Limitations
 
@@ -44,7 +48,7 @@ A mobile robot project built end-to-end: mechanical design → URDF → physics 
 - **Python** (ROS nodes)
 
 ## Repository Structure
-
+```
 mobile_robot/
 ├── urdf/         # Robot description (URDF)
 ├── meshes/       # STL mesh files for visual/collision geometry
@@ -54,25 +58,26 @@ mobile_robot/
 ├── maps/         # Saved SLAM maps
 ├── docs/         # Screenshots and media
 └── scripts/      # Python nodes
+```
 
 ## Running the Simulation
-
-Spawn the robot in the house environment with LiDAR active:
+```
+-Spawn the robot in the house environment with LiDAR active:
 roslaunch mobile_robot gazebo.launch
 
-Drive it manually with the keyboard:
+-Drive it manually with the keyboard:
 rosrun teleop_twist_keyboard teleop_twist_keyboard.py
 
-Build a map with SLAM:
+-Build a map with SLAM:
 roslaunch mobile_robot slam.launch
 
-Or navigate autonomously on a saved map:
+-Or navigate autonomously on a saved map:
 rosrun map_server map_server maps/house_map.yaml
 roslaunch mobile_robot move_base.launch
 
-View the robot model and TF frames only (no simulation):
+-View the robot model and TF frames only (no simulation):
 roslaunch mobile_robot mobile_robot.launch
-
+```
 ## Key Engineering Challenges Solved
 
 - **Unit scale mismatch**: diagnosed and fixed a 10x scale discrepancy introduced during the Fusion 360 → Onshape export pipeline, which had been causing unstable, exploding physics in simulation.
