@@ -26,6 +26,10 @@ A mobile robot project built end-to-end: mechanical design → URDF → physics 
 ✅ **SLAM** — mapped the environment using `slam_toolbox`, saved as a reusable occupancy grid map
 ✅ **Autonomous navigation** — `move_base` + `amcl`, confirmed working end-to-end: robot localizes, plans a global path, and autonomously drives to a goal pose while avoiding obstacles
 
+## Known Limitations
+
+- **Control loop timing under VM performance constraints**: `move_base`'s local planner is configured for a 20Hz control loop, but the simulation environment (Gazebo physics, LiDAR simulation, costmaps, and the planner all running simultaneously on a virtualized, resource-limited machine) cannot consistently sustain this rate, with the control loop frequently taking 0.05-0.13s instead of the intended 0.05s. This causes minor jerking during path-following and oscillation during final goal-approach. The robot reliably reaches its navigation goals despite this, but final positioning is not perfectly smooth. Reducing costmap update frequencies and adjusting goal tolerances did not resolve this, confirming the limitation is a genuine computational/hardware constraint rather than a configuration issue. Likely improved by running on dedicated (non-virtualized) hardware with better real-time performance.
+
 🚧 **Planned next:**
 - Autonomous frontier exploration (`explore_lite`)
 - Stereo camera integration
