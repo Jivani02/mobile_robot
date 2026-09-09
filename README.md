@@ -1,4 +1,4 @@
-# Mobile Robot — 4-Wheel Skid-Steer Robot with LiDAR, SLAM & Navigation
+# Mobile Robot — 4-Wheel Skid-Steer Robot with LiDAR, SLAM & Autonomous Navigation
 
 A mobile robot project built end-to-end: mechanical design → URDF → physics simulation → differential drive control → LiDAR sensing → SLAM mapping → autonomous navigation. Built as a hands-on learning and portfolio project covering the full robotics development pipeline in ROS1.
 
@@ -11,10 +11,10 @@ A mobile robot project built end-to-end: mechanical design → URDF → physics 
 ![Gazebo view](docs/gazebo_1.png)
 
 **LiDAR scan visualization**
-![Gazebo scan](docs/gazebo_scan.png)
+![LiDAR scan in Gazebo](docs/gazebo_scan.png)
 
-**Correct orientation in Gazebo adn RViz**
-![Gazebo scan](docs/Correct_orienation.png)
+**Correct orientation — RViz matching Gazebo**
+![Correct orientation](docs/Correct_orienation.png)
 
 ## Current Status
 
@@ -65,7 +65,6 @@ roslaunch mobile_robot slam.launch
 Or navigate autonomously on a saved map:
 rosrun map_server map_server maps/house_map.yaml
 roslaunch mobile_robot move_base.launch
-rosrun rviz rviz
 
 View the robot model and TF frames only (no simulation):
 roslaunch mobile_robot mobile_robot.launch
