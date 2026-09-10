@@ -34,7 +34,7 @@ A mobile robot project built end-to-end: mechanical design -> URDF -> physics si
 - Done: **LiDAR sensing** — simulated 360-degree 2D LiDAR publishing to `/scan`, verified in a realistic house environment
 - Done: **SLAM** — mapped the environment using `slam_toolbox`, saved as a reusable occupancy grid map
 - Done: **Autonomous navigation** — `move_base` + `amcl`, confirmed working end-to-end: robot localizes, plans a global path, and autonomously drives to a goal pose while avoiding obstacles
--**In progress: **Stereo camera** — left and right camera sensors mounted and correctly positioned/oriented, publishing low-resolution image  streams (`/left_camera/image_raw`, `/right_camera/image_raw`) with confirmed visual disparity between views. Depth computation and point-cloud generation from the stereo pair not yet implemented.
+- In progress: **Stereo camera** — left and right camera sensors mounted and correctly positioned/oriented, publishing low-resolution image  streams (`/left_camera/image_raw`, `/right_camera/image_raw`) with confirmed visual disparity between views. Depth computation and point-cloud generation from the stereo pair not yet implemented
 
 
 ## Known Limitations
