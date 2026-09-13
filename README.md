@@ -34,7 +34,7 @@ A mobile robot project built end-to-end: mechanical design -> URDF -> physics si
 - Done: **LiDAR sensing** — simulated 360-degree 2D LiDAR publishing to `/scan`, verified in a realistic house environment
 - Done: **SLAM** — mapped the environment using `slam_toolbox`, saved as a reusable occupancy grid map
 - Done: **Autonomous navigation** — `move_base` + `amcl`, confirmed working end-to-end: robot localizes, plans a global path, and autonomously drives to a goal pose while avoiding obstacles
-- In progress: **Stereo camera** — left and right camera sensors mounted and correctly positioned/oriented, publishing low-resolution image  streams (`/left_camera/image_raw`, `/right_camera/image_raw`) with confirmed visual disparity between views. Depth computation and point-cloud generation from the stereo pair not yet implemented
+- Done: **Stereo camera and depth computation** — left and right camera sensors mounted and correctly positioned/oriented on the chassis, publishing low-resolution image streams. Real stereo depth computed via `stereo_image_proc`, verified with a custom Python viewer node (using `cv_bridge`/OpenCV). Confirmed producing accurate depth data on textured objects; as expected for stereo vision, flat/textureless surfaces (plain walls) do not produce reliable depth data — a known, fundamental limitation of the technique rather than a configuration issue.
 
 
 ## Known Limitations
@@ -42,7 +42,6 @@ A mobile robot project built end-to-end: mechanical design -> URDF -> physics si
 - **Control loop timing under VM performance constraints**: `move_base`'s local planner is configured for a 20Hz control loop, but the simulation environment (Gazebo physics, LiDAR simulation, costmaps, and the planner all running simultaneously on a virtualized, resource-limited machine) cannot consistently sustain this rate, with the control loop frequently taking 0.05-0.13s instead of the intended 0.05s. This causes minor jerking during path-following and oscillation during final goal-approach. The robot reliably reaches its navigation goals despite this, but final positioning is not perfectly smooth. Reducing costmap update frequencies and adjusting goal tolerances did not resolve this, confirming the limitation is a genuine computational/hardware constraint rather than a configuration issue. Likely improved by running on dedicated (non-virtualized) hardware with better real-time performance.
 
 🚧 **Planned next:**
-- Stereo depth/disparity processing and point-cloud generation
 - Autonomous frontier exploration (`explore_lite`)
 - Independent 4-wheel drive (upgrade from skid-steer)
 
