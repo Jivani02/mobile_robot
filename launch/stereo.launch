@@ -1,0 +1,16 @@
+<launch>   
+     
+     <group ns="stereo_camera">
+       <node pkg="stereo_image_proc" type="stereo_image_proc" name="stereo_image_proc" output="screen" />
+     </group>
+
+     <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan">
+         <remap from="cloud_in" to="/stereo_camera/points2"/>
+         <remap from="scan" to="/camera_scan"/>
+         <param name="target_frame" value="body1"/>
+         <param name="min_height" value="-1.0"/>
+         <param name="max_height" value="1.0"/>
+         <param name="range_min" value="0.1"/>
+     </node>
+     
+</launch>

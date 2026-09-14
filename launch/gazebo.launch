@@ -16,6 +16,8 @@
     
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen" />
     
+   
+    
 <!--
 <rosparam file="$(find mobile_robot)/config/diff_drive_control.yaml" command="load" />
 
